@@ -91,6 +91,20 @@ const filterData = (item) => {
 	return filterByText && filterByGenre && filterByLang && filterByRaiting;
 };
 
+const sortData = (data) => {
+	if (sortBy.value === 'title') {
+		data.sort((item1, item2) => (item1.title > item2.title ? 1 : -1));
+	}
+
+	if (sortBy.value === 'rating') {
+		data.sort((item1, item2) =>
+			item1.vote_average < item2.vote_average ? 1 : -1
+		);
+	}
+
+	return data;
+};
+
 const showDetails = (element) => {
 	element.classList.toggle('fa-eye-slash');
 	element.classList.toggle('fa-eye');
@@ -118,6 +132,7 @@ const clearFilters = () => {
 	genres.selectedIndex = 0;
 	languages.selectedIndex = 0;
 	ratings.selectedIndex = 0;
+	sortBy.selectedIndex = 0;
 };
 
 /**
@@ -223,6 +238,11 @@ languages.addEventListener('change', async () => {
 
 ratings.addEventListener('change', async () => {
 	await buildDataTable(stateObject.data);
+});
+
+sortBy.addEventListener('change', async () => {
+	const dataList = [...stateObject.data];
+	await buildDataTable(sortData(dataList));
 });
 
 /**
