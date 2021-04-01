@@ -5,11 +5,20 @@ const API_KEY = '9dfd01779b6fdeb1cde19f1c010bb6a9';
 /**
  * TMDB Endpoints URLs
  */
-const ALL_MOVIES_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}`;
-const TRENDING_MOVIES_URL = `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`;
-const POPULAR_MOVIES_URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`;
+const ALL_MOVIES_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=1`;
+const TRENDING_MOVIES_URL = `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}&page=1`;
+const POPULAR_MOVIES_URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&page=1`;
 const GENRES_URL = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
 const IMAGE_URL = `https://image.tmdb.org/t/p/w300`;
+/**
+ * State Object
+ */
+const stateObject = {
+	optionSelected: allMovies,
+	searchBarText: null,
+	data: [],
+	dataFiltered: []
+};
 /**
  * Functions
  */
@@ -44,6 +53,17 @@ const getGenres = async () => {
 	return genres;
 };
 
+const filterByText = (query) => {
+	if (query.trim()) {
+		stateObject.dataFiltered = stateObject.data.filter((item) =>
+			item.title.toLowerCase().includes(query.toLowerCase())
+		);
+		buildDataTable(stateObject.dataFiltered);
+	} else {
+		buildDataTable(stateObject.data);
+	}
+};
+
 const showDetails = (element) => {
 	element.classList.toggle('fa-eye-slash');
 	element.classList.toggle('fa-eye');
@@ -60,23 +80,27 @@ const changeSelectedOption = (optionsArr, optionIndex) => {
 	optionsArr.forEach((option, index) => {
 		if (index === optionIndex) {
 			option.classList.add('selected');
+			stateObject.optionSelected = option;
 		} else {
 			option.classList.remove('selected');
 		}
 	});
 };
+
+const clearFilters = () => {
+	searchBar.value = '';
+};
 /**
  * Display Data Table
  */
-const displayDataTable = async (func) => {
+
+const buildDataTable = async (dataArr) => {
 	tableContainer.innerHTML = '';
 
 	let output =
 		'<table id="dataTable"><thead><th>Title</th><th>Genre</th><th>Language</th><th>Rating</th><th>Details</th></thead><tbody>';
 
-	const moviesArr = await func();
-
-	for (let item of moviesArr) {
+	for (let item of dataArr) {
 		const movie = await getMovie(item.id);
 		output += `<tr>
 	              <td>${movie.title}</td>
@@ -99,36 +123,55 @@ const displayDataTable = async (func) => {
 	            </tr>`;
 	}
 
-	tableContainer.innerHTML = `${output}</tbody></table>`;
+	output += '</tbody></table>';
+	tableContainer.innerHTML = output;
+};
+
+const getData = async (func) => {
+	stateObject.data.length = 0;
+
+	const moviesArr = await func();
+	stateObject.data = moviesArr;
+
+	await buildDataTable(moviesArr);
 };
 
 const displayTrendingMovies = () => {
-	displayDataTable(getDailyTrendingMovies);
+	getData(getDailyTrendingMovies);
 };
 
 const displayAllMovies = () => {
-	displayDataTable(getAllMovies);
+	getData(getAllMovies);
 };
 
 const displayPopularMovies = () => {
-	displayDataTable(getPopularMovies);
+	getData(getPopularMovies);
 };
 /**
  * Event Listeners
  */
 allMovies.addEventListener('click', (e) => {
 	changeSelectedOption([allMovies, trending, popular], 0);
+	clearFilters();
 	displayAllMovies();
 });
 
 trending.addEventListener('click', () => {
 	changeSelectedOption([allMovies, trending, popular], 1);
+	clearFilters();
 	displayTrendingMovies();
 });
 
 popular.addEventListener('click', () => {
 	changeSelectedOption([allMovies, trending, popular], 2);
+	clearFilters();
 	displayPopularMovies();
+});
+
+searchBar.addEventListener('keypress', (e) => {
+	if (e.key === 'Enter') {
+		filterByText(searchBar.value);
+	}
 });
 
 displayAllMovies();
