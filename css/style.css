@@ -3,8 +3,8 @@
 /* *************************** */
 * {
 	box-sizing: border-box;
-	padding: 0;
 	margin: 0;
+	padding: 0;
 }
 
 body {
@@ -37,4 +37,37 @@ header nav a {
 
 header nav a.selected {
 	color: #03dac6;
+}
+
+/* *************************** */
+/* Options Buttons Styling     */
+/* *************************** */
+.optionsContainer {
+	display: flex;
+	margin: 2.5em 0;
+}
+
+.optionsContainer .option {
+	width: 210px;
+	height: 55px;
+	background-color: #3700b3;
+	color: #ffffff;
+	font-size: 0.9rem;
+	font-weight: 600;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 18px;
+	margin-right: 2.1em;
+	cursor: pointer;
+}
+
+.optionsContainer .option.selected {
+	background-color: #03dac6;
+	color: #222121;
+}
+
+.optionsContainer .option:not(.selected):hover {
+	background-color: #bb86f6;
+	color: #222121;
 }
