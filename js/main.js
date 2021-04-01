@@ -3,21 +3,20 @@
  */
 const API_KEY = '9dfd01779b6fdeb1cde19f1c010bb6a9';
 /**
- * TMDB Endpoints URLs
+ * TMDB Movies Endpoints URLs
  */
 const ALL_MOVIES_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=1`;
 const TRENDING_MOVIES_URL = `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}&page=1`;
 const POPULAR_MOVIES_URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&page=1`;
+const MOVIE_DETAILS_URL = `https://api.themoviedb.org/3/movie/`;
 const GENRES_URL = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
+const LANGUAGES_URL = `https://api.themoviedb.org/3/configuration/languages?api_key=${API_KEY}`;
 const IMAGE_URL = `https://image.tmdb.org/t/p/w300`;
 /**
  * State Object
  */
 const stateObject = {
-	optionSelected: allMovies,
-	searchBarText: null,
-	data: [],
-	dataFiltered: []
+	data: []
 };
 /**
  * Functions
@@ -41,8 +40,9 @@ const getPopularMovies = async () => {
 };
 
 const getMovie = async (id) => {
-	const MOVIE_DETAILS_URL = `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`;
-	const response = await fetch(MOVIE_DETAILS_URL);
+	const response = await fetch(
+		`${MOVIE_DETAILS_URL}${id}?api_key=${API_KEY}&language=en-US`
+	);
 	const result = await response.json();
 	return result;
 };
@@ -53,15 +53,34 @@ const getGenres = async () => {
 	return genres;
 };
 
-const filterByText = (query) => {
-	if (query.trim()) {
-		stateObject.dataFiltered = stateObject.data.filter((item) =>
-			item.title.toLowerCase().includes(query.toLowerCase())
-		);
-		buildDataTable(stateObject.dataFiltered);
-	} else {
-		buildDataTable(stateObject.data);
+const getLanguages = async () => {
+	const response = await fetch(LANGUAGES_URL);
+	const result = await response.json();
+	return result;
+};
+
+const filterData = (item) => {
+	let filterByText = true;
+	let filterByGenre = true;
+	let filterByLang = true;
+
+	if (searchBar.value.trim()) {
+		filterByText = item.title
+			.toLowerCase()
+			.includes(searchBar.value.trim().toLowerCase());
 	}
+
+	if (genres.selectedIndex) {
+		filterByGenre = item.genres[0].id == genres.value;
+	}
+
+	if (languages.selectedIndex) {
+		filterByLang =
+			item.spoken_languages.length &&
+			item.spoken_languages[0].iso_639_1 == languages.value;
+	}
+
+	return filterByText && filterByGenre && filterByLang;
 };
 
 const showDetails = (element) => {
@@ -80,7 +99,6 @@ const changeSelectedOption = (optionsArr, optionIndex) => {
 	optionsArr.forEach((option, index) => {
 		if (index === optionIndex) {
 			option.classList.add('selected');
-			stateObject.optionSelected = option;
 		} else {
 			option.classList.remove('selected');
 		}
@@ -89,20 +107,29 @@ const changeSelectedOption = (optionsArr, optionIndex) => {
 
 const clearFilters = () => {
 	searchBar.value = '';
+	genres.selectedIndex = 0;
 };
+
 /**
  * Display Data Table
  */
-
 const buildDataTable = async (dataArr) => {
 	tableContainer.innerHTML = '';
 
-	let output =
-		'<table id="dataTable"><thead><th>Title</th><th>Genre</th><th>Language</th><th>Rating</th><th>Details</th></thead><tbody>';
+	let output = `<table id="dataTable">
+      <thead>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Language</th>
+        <th>Rating</th>
+        <th>Details</th>
+      </thead>
+      <tbody>`;
 
 	for (let item of dataArr) {
 		const movie = await getMovie(item.id);
-		output += `<tr>
+		if (filterData(movie)) {
+			output += `<tr>
 	              <td>${movie.title}</td>
 	              <td>${movie.genres[0].name}</td>
 	              <td>${
@@ -115,12 +142,13 @@ const buildDataTable = async (dataArr) => {
 	              <td class="spanRow hideDetail">
 	                <div id="rowDetail">
 	                  <img src="${IMAGE_URL}${
-			movie.poster_path
-		}" alt="" class="movieImage" />
+				movie.poster_path
+			}" alt="" class="movieImage" />
 	                  <p>${movie.overview}</p>
 	                </div>
 							  </td>
 	            </tr>`;
+		}
 	}
 
 	output += '</tbody></table>';
@@ -168,10 +196,50 @@ popular.addEventListener('click', () => {
 	displayPopularMovies();
 });
 
-searchBar.addEventListener('keypress', (e) => {
+searchBar.addEventListener('keypress', async (e) => {
 	if (e.key === 'Enter') {
-		filterByText(searchBar.value);
+		await buildDataTable(stateObject.data);
 	}
 });
 
+genres.addEventListener('change', async () => {
+	await buildDataTable(stateObject.data);
+});
+
+languages.addEventListener('change', async () => {
+	await buildDataTable(stateObject.data);
+});
+
+/**
+ * First time execution
+ */
+const fillGenresList = async () => {
+	const genresList = await getGenres();
+
+	let options = '<option value="" selected>All Genres</option>';
+	genresList.forEach((genre) => {
+		options += `<option value="${genre.id}">${genre.name}</option>`;
+	});
+
+	genres.innerHTML = options;
+};
+
+const fillLanguagesList = async () => {
+	const languagesList = await getLanguages();
+
+	languagesList.sort((lang1, lang2) =>
+		lang1.english_name > lang2.english_name ? 1 : -1
+	);
+
+	let options = '<option value="" selected>All Languages</option>';
+	languagesList.forEach((lang, index) => {
+		if (index)
+			options += `<option value="${lang.iso_639_1}">${lang.english_name}</option>`;
+	});
+
+	languages.innerHTML = options;
+};
+
+fillGenresList();
+fillLanguagesList();
 displayAllMovies();
