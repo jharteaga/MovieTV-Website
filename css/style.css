@@ -151,7 +151,7 @@ header nav a.selected {
 
 #dataTable tr {
 	display: grid;
-	grid-template-columns: repeat(5, 1fr);
+	grid-template-columns: 3fr repeat(4, 1fr);
 }
 
 #dataTable td {
@@ -162,6 +162,12 @@ header nav a.selected {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	/* font-size: 1.1em; */
+}
+
+#dataTable td:nth-child(1) {
+	justify-content: flex-start;
+	padding-left: 2em;
 }
 
 #dataTable .far {
@@ -181,22 +187,22 @@ header nav a.selected {
 #rowDetail {
 	display: flex;
 	justify-content: flex-start;
-	align-items: center;
+	align-items: flex-start;
 	width: 100%;
 	margin-left: 3em;
 	padding-bottom: 1em;
 }
 
 #rowDetail .movieImage {
-	width: 220px;
-	height: 121px;
+	width: 155px;
+	height: 220px;
 	border-radius: 27px;
 }
 
 #rowDetail p {
 	text-align: left;
-	width: 70%;
+	width: 70ch;
 	color: white;
-	font-size: 0.8rem;
-	margin-left: 1em;
+	font-size: 0.95rem;
+	margin-left: 1.5em;
 }
