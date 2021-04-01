@@ -63,6 +63,7 @@ const filterData = (item) => {
 	let filterByText = true;
 	let filterByGenre = true;
 	let filterByLang = true;
+	let filterByRaiting = true;
 
 	if (searchBar.value.trim()) {
 		filterByText = item.title
@@ -80,7 +81,14 @@ const filterData = (item) => {
 			item.spoken_languages[0].iso_639_1 == languages.value;
 	}
 
-	return filterByText && filterByGenre && filterByLang;
+	if (ratings.selectedIndex) {
+		console.log(ratings.value);
+		if (ratings.value >= 6)
+			filterByRaiting = item.vote_average >= ratings.value;
+		else filterByRaiting = item.vote_average <= ratings.value;
+	}
+
+	return filterByText && filterByGenre && filterByLang && filterByRaiting;
 };
 
 const showDetails = (element) => {
@@ -108,6 +116,8 @@ const changeSelectedOption = (optionsArr, optionIndex) => {
 const clearFilters = () => {
 	searchBar.value = '';
 	genres.selectedIndex = 0;
+	languages.selectedIndex = 0;
+	ratings.selectedIndex = 0;
 };
 
 /**
@@ -175,6 +185,7 @@ const displayAllMovies = () => {
 const displayPopularMovies = () => {
 	getData(getPopularMovies);
 };
+
 /**
  * Event Listeners
  */
@@ -207,6 +218,10 @@ genres.addEventListener('change', async () => {
 });
 
 languages.addEventListener('change', async () => {
+	await buildDataTable(stateObject.data);
+});
+
+ratings.addEventListener('change', async () => {
 	await buildDataTable(stateObject.data);
 });
 
