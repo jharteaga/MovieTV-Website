@@ -12,7 +12,9 @@
 
 body {
 	background-color: #121212;
-	padding: 2em 4.5em;
+	width: 85%;
+	max-width: 1500px;
+	margin: 1.5em auto;
 }
 
 /* *************************** */
@@ -140,26 +142,61 @@ header nav a.selected {
 
 #dataTable tbody tr {
 	background-color: #202020;
-}
-
-#dataTable td {
-	margin-top: 1em;
-	color: #03dac6;
-	text-align: center;
-	padding: 1em;
-	font-weight: 300;
-}
-
-#dataTable td:nth-child(1) {
+	margin: 0.7em 0;
 	border-top-left-radius: 13px;
 	border-bottom-left-radius: 13px;
-}
-
-#dataTable td:last-child {
 	border-top-right-radius: 13px;
 	border-bottom-right-radius: 13px;
 }
 
-.fa-eye-slash {
+#dataTable tr {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+}
+
+#dataTable td {
+	color: #03dac6;
+	text-align: center;
+	padding: 1em 0;
+	font-weight: 300;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#dataTable .far {
 	cursor: pointer;
+}
+
+#dataTable .spanRow {
+	display: grid;
+	grid-column: 1/5;
+	justify-content: left;
+}
+
+#dataTable .hideDetail {
+	display: none;
+}
+
+#rowDetail {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+	margin-left: 3em;
+	padding-bottom: 1em;
+}
+
+#rowDetail .movieImage {
+	width: 220px;
+	height: 121px;
+	border-radius: 27px;
+}
+
+#rowDetail p {
+	text-align: left;
+	width: 70%;
+	color: white;
+	font-size: 0.8rem;
+	margin-left: 1em;
 }
