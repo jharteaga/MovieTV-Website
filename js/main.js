@@ -47,9 +47,11 @@ const getGenres = async () => {
 const showDetails = (element) => {
 	element.classList.toggle('fa-eye-slash');
 	element.classList.toggle('fa-eye');
+
 	element.classList.value.includes('fa-eye-slash')
-		? (element.style.color = '#03dac6')
-		: (element.style.color = '#f0f0f0');
+		? element.classList.remove('opened')
+		: element.classList.add('opened');
+
 	const detailRow = element.parentElement.nextElementSibling;
 	detailRow.classList.toggle('hideDetail');
 };

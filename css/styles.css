@@ -162,7 +162,6 @@ header nav a.selected {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	/* font-size: 1.1em; */
 }
 
 #dataTable td:nth-child(1) {
@@ -171,7 +170,12 @@ header nav a.selected {
 }
 
 #dataTable .far {
+	color: #03dac6;
 	cursor: pointer;
+}
+
+#dataTable .far.opened {
+	color: #f0f0f0;
 }
 
 #dataTable .spanRow {
