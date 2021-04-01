@@ -116,3 +116,50 @@ header nav a.selected {
 	cursor: pointer;
 	-webkit-appearance: none;
 }
+
+/* *************************** */
+/* Data Table Styling          */
+/* *************************** */
+
+#tableContainer {
+	margin-top: 2em;
+	display: flex;
+	justify-content: center;
+}
+
+#dataTable {
+	width: 100%;
+	border-spacing: 0 0.5em;
+}
+
+#dataTable thead th {
+	color: #bb86f6;
+	font-weight: 500;
+	padding: 0 2em;
+}
+
+#dataTable tbody tr {
+	background-color: #202020;
+}
+
+#dataTable td {
+	margin-top: 1em;
+	color: #03dac6;
+	text-align: center;
+	padding: 1em;
+	font-weight: 300;
+}
+
+#dataTable td:nth-child(1) {
+	border-top-left-radius: 13px;
+	border-bottom-left-radius: 13px;
+}
+
+#dataTable td:last-child {
+	border-top-right-radius: 13px;
+	border-bottom-right-radius: 13px;
+}
+
+.fa-eye-slash {
+	cursor: pointer;
+}
