@@ -36,7 +36,7 @@ const getDailyTrendingTV = async () => {
 	return results;
 };
 
-const getPopularTV = async () => {
+const getTopRatedTV = async () => {
 	const response = await fetch(TOP_RATED_TV_URL);
 	const { results } = await response.json();
 	return results;
@@ -47,6 +47,7 @@ const getTV = async (id) => {
 		`${TV_DETAILS_URL}${id}?api_key=${API_KEY}&language=en-US`
 	);
 	const result = await response.json();
+	console.log(result);
 	return result;
 };
 
@@ -158,7 +159,7 @@ const buildDataTable = async (dataArr) => {
 		if (filterData(tv)) {
 			output += `<tr>
 	              <td>${tv.name}</td>
-	              <td>${tv.genres[0].name}</td>
+	              <td>${tv.genres.length > 0 ? tv.genres[0].name : 'Unknown'}</td>
 	              <td>${
 									tv.spoken_languages.length > 0
 										? tv.spoken_languages[0].english_name

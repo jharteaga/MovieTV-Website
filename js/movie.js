@@ -158,7 +158,9 @@ const buildDataTable = async (dataArr) => {
 		if (filterData(movie)) {
 			output += `<tr>
 	              <td>${movie.title}</td>
-	              <td>${movie.genres[0].name}</td>
+	              <td>${
+									movie.genres.length > 0 ? movie.genres[0].name : 'Unknown'
+								}</td>
 	              <td>${
 									movie.spoken_languages.length > 0
 										? movie.spoken_languages[0].english_name
