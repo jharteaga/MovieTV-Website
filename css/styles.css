@@ -197,9 +197,9 @@ header nav a.selected {
 	padding-bottom: 1em;
 }
 
-#rowDetail .movieImage {
-	width: 155px;
-	height: 220px;
+#rowDetail .mediaImage {
+	width: 180px;
+	height: 260px;
 	border-radius: 27px;
 }
 
@@ -209,20 +209,19 @@ header nav a.selected {
 	color: white;
 	font-size: 0.9rem;
 	margin-left: 1.5em;
-	text-overflow: ellipsis;
 }
 
 #columnDetail {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-evenly;
-	height: 200px;
+	justify-content: flex-start;
+	height: 280px;
+}
+
+#columnDetail p {
+	margin-bottom: 1em;
 }
 
 #columnDetail .subHeading {
 	font-weight: 600;
-}
-
-#columnDetail a {
-	color: rgb(180, 180, 247);
 }

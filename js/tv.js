@@ -3,13 +3,16 @@
  */
 const API_KEY = '9dfd01779b6fdeb1cde19f1c010bb6a9';
 /**
- * TMDB Movies Endpoints URLs
+ * TMDB TV Series Endpoints URLs
  */
-const ALL_MOVIES_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=1`;
-const TRENDING_MOVIES_URL = `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}&page=1`;
-const POPULAR_MOVIES_URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&page=1`;
-const MOVIE_DETAILS_URL = `https://api.themoviedb.org/3/movie/`;
-const GENRES_URL = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
+const ALL_TV_URL = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}`;
+const TRENDING_TV_URL = `https://api.themoviedb.org/3/trending/tv/day?api_key=${API_KEY}&page=1`;
+const TOP_RATED_TV_URL = `https://api.themoviedb.org/3/tv/top_rated?api_key=${API_KEY}&page=1`;
+const TV_DETAILS_URL = `https://api.themoviedb.org/3/tv/`;
+/**
+ * TMDB Common Endpoints URLs
+ */
+const GENRES_URL = `https://api.themoviedb.org/3/genre/tv/list?api_key=${API_KEY}&language=en-US`;
 const LANGUAGES_URL = `https://api.themoviedb.org/3/configuration/languages?api_key=${API_KEY}`;
 const IMAGE_URL = `https://image.tmdb.org/t/p/w300`;
 /**
@@ -21,27 +24,27 @@ const stateObject = {
 /**
  * Functions
  */
-const getAllMovies = async () => {
-	const response = await fetch(ALL_MOVIES_URL);
+const getAllTV = async () => {
+	const response = await fetch(ALL_TV_URL);
 	const { results } = await response.json();
 	return results;
 };
 
-const getDailyTrendingMovies = async () => {
-	const response = await fetch(TRENDING_MOVIES_URL);
+const getDailyTrendingTV = async () => {
+	const response = await fetch(TRENDING_TV_URL);
 	const { results } = await response.json();
 	return results;
 };
 
-const getPopularMovies = async () => {
-	const response = await fetch(POPULAR_MOVIES_URL);
+const getPopularTV = async () => {
+	const response = await fetch(TOP_RATED_TV_URL);
 	const { results } = await response.json();
 	return results;
 };
 
-const getMovie = async (id) => {
+const getTV = async (id) => {
 	const response = await fetch(
-		`${MOVIE_DETAILS_URL}${id}?api_key=${API_KEY}&language=en-US`
+		`${TV_DETAILS_URL}${id}?api_key=${API_KEY}&language=en-US`
 	);
 	const result = await response.json();
 	return result;
@@ -63,7 +66,7 @@ const filterData = (item) => {
 	let filterByText = true;
 	let filterByGenre = true;
 	let filterByLang = true;
-	let filterByRaiting = true;
+	let filterByRating = true;
 
 	if (searchBar.value.trim()) {
 		filterByText = item.title
@@ -83,17 +86,16 @@ const filterData = (item) => {
 
 	if (ratings.selectedIndex) {
 		console.log(ratings.value);
-		if (ratings.value >= 6)
-			filterByRaiting = item.vote_average >= ratings.value;
-		else filterByRaiting = item.vote_average <= ratings.value;
+		if (ratings.value >= 6) filterByRating = item.vote_average >= ratings.value;
+		else filterByRating = item.vote_average <= ratings.value;
 	}
 
-	return filterByText && filterByGenre && filterByLang && filterByRaiting;
+	return filterByText && filterByGenre && filterByLang && filterByRating;
 };
 
 const sortData = (data) => {
 	if (sortBy.value === 'title') {
-		data.sort((item1, item2) => (item1.title > item2.title ? 1 : -1));
+		data.sort((item1, item2) => (item1.name > item2.name ? 1 : -1));
 	}
 
 	if (sortBy.value === 'rating') {
@@ -152,29 +154,32 @@ const buildDataTable = async (dataArr) => {
       <tbody>`;
 
 	for (let item of dataArr) {
-		const movie = await getMovie(item.id);
-		if (filterData(movie)) {
+		const tv = await getTV(item.id);
+		if (filterData(tv)) {
 			output += `<tr>
-	              <td>${movie.title}</td>
-	              <td>${movie.genres[0].name}</td>
+	              <td>${tv.name}</td>
+	              <td>${tv.genres[0].name}</td>
 	              <td>${
-									movie.spoken_languages.length > 0
-										? movie.spoken_languages[0].english_name
+									tv.spoken_languages.length > 0
+										? tv.spoken_languages[0].english_name
 										: 'Unknown'
 								}</td>
-	              <td>${movie.vote_average}</td>
+	              <td>${tv.vote_average}</td>
 	              <td><i class="far fa-eye-slash" onclick="showDetails(this)"></i></td>
 	              <td class="spanRow hideDetail">
 	                <div id="rowDetail">
 	                  <img src="${IMAGE_URL}${
-				movie.poster_path
-			}" alt="" class="movieImage" />
+				tv.poster_path
+			}" alt="" class="mediaImage" />
                     <div id="columnDetail">
 	                    <p><span class="subHeading">Overview:</span> ${
-												movie.overview
+												tv.overview
 											}</p>
                       <p>
-											  <span class="subHeading">Release Date:</span> ${movie.release_date}
+											  <span class="subHeading">Release Date:</span> ${tv.first_air_date}
+										  </p>
+                      <p>
+											  <span class="subHeading">Seasons:</span> ${tv.number_of_seasons}
 										  </p>
                     </div>
 	                </div>
@@ -190,43 +195,43 @@ const buildDataTable = async (dataArr) => {
 const getData = async (func) => {
 	stateObject.data.length = 0;
 
-	const moviesArr = await func();
-	stateObject.data = moviesArr;
+	const tvArray = await func();
+	stateObject.data = tvArray;
 
-	await buildDataTable(moviesArr);
+	await buildDataTable(tvArray);
 };
 
-const displayTrendingMovies = () => {
-	getData(getDailyTrendingMovies);
+const displayAllTV = () => {
+	getData(getAllTV);
 };
 
-const displayAllMovies = () => {
-	getData(getAllMovies);
+const displayTrendingTV = () => {
+	getData(getDailyTrendingTV);
 };
 
-const displayPopularMovies = () => {
-	getData(getPopularMovies);
+const displayTopRatedTV = () => {
+	getData(getTopRatedTV);
 };
 
 /**
  * Event Listeners
  */
-allMovies.addEventListener('click', (e) => {
-	changeSelectedOption([allMovies, trending, popular], 0);
+allTV.addEventListener('click', (e) => {
+	changeSelectedOption([allTV, trendingTV, topRatedTV], 0);
 	clearFilters();
-	displayAllMovies();
+	displayAllTV();
 });
 
-trending.addEventListener('click', () => {
-	changeSelectedOption([allMovies, trending, popular], 1);
+trendingTV.addEventListener('click', () => {
+	changeSelectedOption([allTV, trendingTV, topRatedTV], 1);
 	clearFilters();
-	displayTrendingMovies();
+	displayTrendingTV();
 });
 
-popular.addEventListener('click', () => {
-	changeSelectedOption([allMovies, trending, popular], 2);
+topRatedTV.addEventListener('click', () => {
+	changeSelectedOption([allTV, trendingTV, topRatedTV], 2);
 	clearFilters();
-	displayPopularMovies();
+	displayTopRatedTV();
 });
 
 searchBar.addEventListener('keypress', async (e) => {
@@ -284,4 +289,4 @@ const fillLanguagesList = async () => {
 
 fillGenresList();
 fillLanguagesList();
-displayAllMovies();
+displayAllTV();
