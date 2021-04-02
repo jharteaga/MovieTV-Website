@@ -169,7 +169,14 @@ const buildDataTable = async (dataArr) => {
 	                  <img src="${IMAGE_URL}${
 				movie.poster_path
 			}" alt="" class="movieImage" />
-	                  <p>${movie.overview}</p>
+                    <div id="columnDetail">
+	                    <p><span class="subHeading">Overview:</span> ${
+												movie.overview
+											}</p>
+                      <p>
+											  <span class="subHeading">Release Date:</span> ${movie.release_date}
+										  </p>
+                    </div>
 	                </div>
 							  </td>
 	            </tr>`;

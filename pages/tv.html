@@ -5,68 +5,53 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Term Project - Jose Arteaga</title>
+		<link rel="stylesheet" href="../css/styles.css" />
+		<script
+			src="https://kit.fontawesome.com/3bc9f84f10.js"
+			crossorigin="anonymous"
+			defer
+		></script>
 	</head>
 	<body>
+		<header>
+			<img src="../img/logo.svg" alt="Logo" class="logo" />
+			<nav>
+				<a href="../index.html" class="navItem">Movies</a>
+				<a href="./tv.html" class="navItem selected">TV</a>
+			</nav>
+		</header>
 		<main>
-			<div id="tableContainer">
-				<table id="dataTable">
-					<thead>
-						<th>Title</th>
-						<th>Genre</th>
-						<th>Language</th>
-						<th>Rating</th>
-						<th></th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Avengers</td>
-							<td>Action</td>
-							<td>English</td>
-							<td>9.5</td>
-							<td>
-								<i class="far fa-eye-slash" onclick="toggleRow(this)"></i>
-							</td>
-							<td class="spanRow hideDetail">
-								<div id="rowDetail">
-									<img src="images/logo.svg" alt="" class="movieImage" />
-									<p>
-										Lorem ipsum dolor sit amet consectetur adipisicing elit.
-										Quos commodi impedit voluptatibus cupiditate assumenda sunt
-										maxime ipsam perspiciatis, aperiam ex facere quae deleniti
-										numquam molestias! Sequi, vero reiciendis voluptatibus in
-										quas culpa commodi voluptas tempora earum quia inventore
-										deserunt nostrum quidem exercitationem ex iure est dolorem
-										laboriosam excepturi eveniet vitae.
-									</p>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>Avengers</td>
-							<td>Action</td>
-							<td>English</td>
-							<td>9.5</td>
-							<td>
-								<i class="far fa-eye-slash" onclick="toggleRow(this)"></i>
-							</td>
-							<td class="spanRow hideDetail">
-								<div id="rowDetail">
-									<img src="images/logo.svg" alt="" class="movieImage" />
-									<p>
-										Lorem ipsum dolor sit amet consectetur adipisicing elit.
-										Quos commodi impedit voluptatibus cupiditate assumenda sunt
-										maxime ipsam perspiciatis, aperiam ex facere quae deleniti
-										numquam molestias! Sequi, vero reiciendis voluptatibus in
-										quas culpa commodi voluptas tempora earum quia inventore
-										deserunt nostrum quidem exercitationem ex iure est dolorem
-										laboriosam excepturi eveniet vitae.
-									</p>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+			<div class="optionsContainer">
+				<div class="option allMovies selected" id="AllTV">All TV Series</div>
+				<div class="option trending" id="trendingTV">Trending</div>
+				<div class="option recommendations" id="popularTV">Popular</div>
 			</div>
+			<div class="filtersContainer">
+				<div class="searchBarContainer">
+					<input type="text" id="searchBar" placeholder="By Title" />
+					<i class="fas fa-search"></i>
+				</div>
+				<select class="dropdown" id="genres">
+					<option value="">All Genres</option>
+				</select>
+				<select class="dropdown" id="languages">
+					<option value="">All Languages</option>
+				</select>
+				<select class="dropdown" id="ratings">
+					<option value="">All Ratings</option>
+					<option value="9.5">9.5 or more</option>
+					<option value="8.5">8.5 or more</option>
+					<option value="6.0">6.0 or more</option>
+					<option value="5.9">less than 6.0</option>
+				</select>
+				<select class="dropdown" id="sortBy">
+					<option value="">Default Order</option>
+					<option value="title">By Title</option>
+					<option value="rating">By Rating</option>
+				</select>
+			</div>
+			<div id="tableContainer"></div>
 		</main>
+		<footer></footer>
 	</body>
 </html>

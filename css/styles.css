@@ -205,8 +205,24 @@ header nav a.selected {
 
 #rowDetail p {
 	text-align: left;
-	width: 70ch;
+	max-width: 75ch;
 	color: white;
-	font-size: 0.95rem;
+	font-size: 0.9rem;
 	margin-left: 1.5em;
+	text-overflow: ellipsis;
+}
+
+#columnDetail {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	height: 200px;
+}
+
+#columnDetail .subHeading {
+	font-weight: 600;
+}
+
+#columnDetail a {
+	color: rgb(180, 180, 247);
 }
