@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>TV Series List</title>
+		<title>&copy;TMDb TV Series List</title>
 		<link rel="stylesheet" href="../css/styles.css" />
 		<script src="../js/tv.js" defer></script>
 		<script
@@ -17,6 +17,7 @@
 		<header>
 			<img src="../img/logo.svg" alt="Logo" class="logo" />
 			<nav>
+				<a href="#" class="navItem">Home</a>
 				<a href="../index.html" class="navItem">Movies</a>
 				<a href="./tv.html" class="navItem selected">TV</a>
 			</nav>
@@ -32,6 +33,7 @@
 					<input type="text" id="searchBar" placeholder="By Title" />
 					<i class="fas fa-search"></i>
 				</div>
+				<!-- <div class="selectsContainer"> -->
 				<select class="dropdown" id="genres">
 					<option value="">All Genres</option>
 				</select>
@@ -50,6 +52,7 @@
 					<option value="title">By Title</option>
 					<option value="rating">By Rating</option>
 				</select>
+				<!-- </div> -->
 			</div>
 			<div id="tableContainer"></div>
 		</main>
@@ -58,6 +61,7 @@
 				&copy;TMDb - Data Source: The Movie Db - For Academic, Non-Commercial
 				Use
 			</p>
+			<p>Icons by Font Awesome&copy; - For Academic, Non-Commercial Use</p>
 		</footer>
 	</body>
 </html>

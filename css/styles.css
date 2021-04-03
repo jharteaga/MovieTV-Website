@@ -33,10 +33,14 @@ header {
 
 header nav a {
 	text-decoration: none;
-	color: #bb86f6;
+	color: #c6c6c6;
 	font-size: 1.6rem;
 	margin: 0 1em;
 	font-weight: 700;
+}
+
+header nav a:not(.selected):hover {
+	color: #bb86f6;
 }
 
 header nav a.selected {
@@ -81,21 +85,30 @@ header nav a.selected {
 /* *************************** */
 .filtersContainer {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
+	justify-content: flex-start;
+	flex-wrap: wrap;
 }
 
 .searchBarContainer {
 	position: relative;
 }
 
+.selectsContainer {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
 .searchBarContainer input {
-	width: 450px;
+	width: 350px;
 	height: 50px;
 	border-radius: 13px;
 	font-size: 0.9rem;
 	color: #000000ac;
-	padding: 0 2.6em 0 0.8em;
+	padding: 0 3em 0 0.8em;
 	outline: none;
+	margin-right: 0.5em;
 }
 
 .searchBarContainer .fa-search {
@@ -103,17 +116,17 @@ header nav a.selected {
 	color: #333333;
 	position: absolute;
 	top: 13px;
-	right: 15px;
+	right: 20px;
 }
 
 .dropdown {
-	width: 190px;
+	width: 170px;
 	height: 48px;
 	padding-left: 1em;
 	color: #000000ac;
-	font-size: 0.9rem;
+	font-size: 0.8rem;
 	border-radius: 24px;
-	margin-left: 1.1em;
+	margin-right: 0.5em;
 	outline: none;
 	cursor: pointer;
 	-webkit-appearance: none;
@@ -124,7 +137,7 @@ header nav a.selected {
 /* *************************** */
 
 #tableContainer {
-	margin-top: 2em;
+	margin-top: 1.2em;
 	display: flex;
 	justify-content: center;
 }
@@ -138,6 +151,7 @@ header nav a.selected {
 	color: #bb86f6;
 	font-weight: 500;
 	padding: 0 2em;
+	font-size: 1rem;
 }
 
 #dataTable tbody tr {
@@ -167,6 +181,7 @@ header nav a.selected {
 #dataTable td:nth-child(1) {
 	justify-content: flex-start;
 	padding-left: 2em;
+	text-align: left;
 }
 
 #dataTable .far {
@@ -180,7 +195,7 @@ header nav a.selected {
 
 #dataTable .spanRow {
 	display: grid;
-	grid-column: 1/5;
+	grid-column: 1 / 5;
 	justify-content: left;
 }
 
@@ -215,7 +230,7 @@ header nav a.selected {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
-	height: 280px;
+	height: 260px;
 }
 
 #columnDetail p {
@@ -233,4 +248,146 @@ footer {
 	margin-top: 1em;
 	color: #f0f0f0;
 	font-size: 0.8rem;
+}
+
+/* ******************************************************* */
+/*            Responsive Media Queries                     */
+/* ******************************************************* */
+
+@media only screen and (max-width: 1250px) {
+	.filtersContainer {
+		height: 130px;
+	}
+}
+
+@media only screen and (max-width: 999px) {
+	#dataTable tr {
+		grid-template-columns: 4fr repeat(4, 1fr);
+	}
+	#dataTable thead th {
+		padding: 0 0.5em;
+		font-size: 1rem;
+	}
+}
+
+@media only screen and (max-width: 703px) {
+	header nav a {
+		font-size: 1.5rem;
+		margin: 0 0.5em;
+	}
+
+	#dataTable thead th {
+		padding: 0 0.2em;
+		font-size: 0.9rem;
+	}
+	#rowDetail p {
+		font-size: 0.8rem;
+	}
+}
+
+@media only screen and (max-width: 642px) {
+	body {
+		width: 90%;
+	}
+
+	.logo {
+		width: 200px;
+		height: 100px;
+	}
+
+	header nav a {
+		font-size: 1.2rem;
+		margin: 0 0.5em;
+	}
+
+	.filtersContainer {
+		height: 170px;
+	}
+
+	.dropdown {
+		width: 48.5%;
+	}
+
+	#dataTable thead th {
+		font-size: 0.8rem;
+	}
+
+	#dataTable td {
+		font-size: 0.8rem;
+	}
+
+	#rowDetail p {
+		font-size: 0.65rem;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	.logo {
+		width: 140px;
+		height: 70px;
+	}
+
+	header nav a {
+		font-size: 1rem;
+		margin: 0 0.3em;
+	}
+
+	.optionsContainer {
+		justify-content: flex-end;
+		margin: 2.5em 0;
+	}
+
+	.optionsContainer .option {
+		font-size: 0.8rem;
+		margin-right: 0.4em;
+		cursor: pointer;
+	}
+
+	.filtersContainer {
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: nowrap;
+		height: 100%;
+	}
+
+	.dropdown {
+		width: 95%;
+		margin-top: 0.5em;
+	}
+
+	.searchBarContainer input {
+		width: 100%;
+	}
+
+	.searchBarContainer {
+		width: 95%;
+	}
+
+	#dataTable thead th {
+		font-size: 0.6rem;
+	}
+
+	#dataTable td {
+		font-size: 0.6rem;
+	}
+
+	footer {
+		font-size: 0.5rem;
+	}
+
+	#rowDetail p {
+		font-size: 0.6rem;
+	}
+
+	#columnDetail {
+		height: 500px;
+		padding-right: 1em;
+	}
+
+	#rowDetail .mediaImage {
+		width: 150px;
+		height: 240px;
+		border-radius: 27px;
+	}
 }
