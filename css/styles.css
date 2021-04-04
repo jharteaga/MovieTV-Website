@@ -103,7 +103,7 @@ header nav a.selected {
 .searchBarContainer input {
 	width: 350px;
 	height: 50px;
-	border-radius: 13px;
+	border-radius: 24px;
 	font-size: 0.9rem;
 	color: #000000ac;
 	padding: 0 3em 0 0.8em;
@@ -121,7 +121,7 @@ header nav a.selected {
 
 .dropdown {
 	width: 170px;
-	height: 48px;
+	height: 50px;
 	padding-left: 1em;
 	color: #000000ac;
 	font-size: 0.8rem;
@@ -381,7 +381,7 @@ footer {
 	}
 
 	#columnDetail {
-		height: 500px;
+		height: 440px;
 		padding-right: 1em;
 	}
 
