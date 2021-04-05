@@ -294,6 +294,11 @@ footer {
 }
 
 @media only screen and (max-width: 999px) {
+	.rightContainer img {
+		width: 300px;
+		height: 420px;
+	}
+
 	#dataTable tr {
 		grid-template-columns: 4fr repeat(4, 1fr);
 	}
@@ -307,6 +312,33 @@ footer {
 	header nav a {
 		font-size: 1.5rem;
 		margin: 0 0.5em;
+	}
+
+	.homeContainer {
+		margin-top: 1.5em;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.leftContainer {
+		width: 95%;
+	}
+
+	.leftContainer h1 {
+		text-align: center;
+	}
+
+	.rightContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.rightContainer img {
+		margin-top: 0.5em;
+		max-width: 500px;
+		width: 95%;
+		height: 450px;
 	}
 
 	#dataTable thead th {
