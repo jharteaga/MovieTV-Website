@@ -4,64 +4,40 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>&copy;TMDb Movies List</title>
+		<title>Home Page</title>
 		<link rel="stylesheet" href="css/styles.css" />
-		<script src="js/movie.js" defer></script>
-		<script
-			src="https://kit.fontawesome.com/3bc9f84f10.js"
-			crossorigin="anonymous"
-			defer
-		></script>
 	</head>
 	<body>
 		<header>
 			<img src="img/logo.svg" alt="Logo" class="logo" />
 			<nav>
-				<a href="#" class="navItem">Home</a>
-				<a href="./index.html" class="navItem selected">Movies</a>
+				<a href="./index.html" class="navItem selected">Home</a>
+				<a href="./pages/movie.html" class="navItem">Movies</a>
 				<a href="./pages/tv.html" class="navItem">TV</a>
 			</nav>
 		</header>
 		<main>
-			<div class="optionsContainer">
-				<div class="option allMovies selected" id="allMovies">All Movies</div>
-				<div class="option trending" id="trending">Trending</div>
-				<div class="option recommendations" id="popular">Top Rated</div>
-			</div>
-			<div class="filtersContainer">
-				<div class="searchBarContainer">
-					<input type="text" id="searchBar" placeholder="By Title" />
-					<i class="fas fa-search"></i>
+			<div class="homeContainer">
+				<div class="leftContainer">
+					<h1>Welcome!</h1>
+					<p>
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Est quaerat
+						quae quod ratione ea voluptatibus blanditiis quas, quidem numquam
+						maiores eius obcaecati modi a ipsa repellat quisquam! Ipsa quis ab
+						ducimus illo consequatur nemo, distinctio quam necessitatibus fugiat
+						corporis qui odio minima, quas eaque excepturi quos aliquid optio
+						rerum. Aut veniam iste, cumque iure dolorem qui quia sunt ducimus
+						quasi, ad quas ipsam nulla, blanditiis facilis at! Officia, dolor
+						harum!
+					</p>
 				</div>
-				<!-- <div class="selectsContainer"> -->
-				<select class="dropdown" id="genres">
-					<option value="">All Genres</option>
-				</select>
-				<select class="dropdown" id="languages">
-					<option value="">All Languages</option>
-				</select>
-				<select class="dropdown" id="ratings">
-					<option value="">All Ratings</option>
-					<option value="9.5">9.5 or more</option>
-					<option value="8.5">8.5 or more</option>
-					<option value="6.0">6.0 or more</option>
-					<option value="5.9">less than 6.0</option>
-				</select>
-				<select class="dropdown" id="sortBy">
-					<option value="">Default Order</option>
-					<option value="title">By Title</option>
-					<option value="rating">By Rating</option>
-				</select>
-				<!-- </div> -->
+				<div class="rightContainer">
+					<!-- https://unsplash.com/@mbaumi?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText -->
+					<!-- https://unsplash.com/photos/4xChyRlbyWM -->
+					<img src="./img/phone-screen.png" alt="" />
+					<p>Photo by Mika Baumeister on Unsplash</p>
+				</div>
 			</div>
-			<div id="tableContainer"></div>
 		</main>
-		<footer>
-			<p>
-				&copy;TMDb - Data Source: The Movie Db - For Academic, Non-Commercial
-				Use
-			</p>
-			<p>Icons by Font Awesome&copy; - For Academic, Non-Commercial Use</p>
-		</footer>
 	</body>
 </html>
