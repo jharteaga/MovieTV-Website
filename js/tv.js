@@ -70,7 +70,7 @@ const filterData = (item) => {
 	let filterByRating = true;
 
 	if (searchBar.value.trim()) {
-		filterByText = item.title
+		filterByText = item.name
 			.toLowerCase()
 			.includes(searchBar.value.trim().toLowerCase());
 	}
