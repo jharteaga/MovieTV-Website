@@ -9,6 +9,7 @@ const ALL_MOVIES_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${AP
 const TRENDING_MOVIES_URL = `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}&page=1`;
 const TOP_RATED_MOVIES_URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&page=1`;
 const MOVIE_DETAILS_URL = `https://api.themoviedb.org/3/movie/`;
+const SEARCH_MOVIE_URL = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=`;
 /**
  * TMDB Common Endpoints URLs
  */
@@ -19,7 +20,8 @@ const IMAGE_URL = `https://image.tmdb.org/t/p/w300`;
  * State Object
  */
 const stateObject = {
-	data: []
+	data: [],
+	searchData: []
 };
 /**
  * Functions
@@ -30,13 +32,21 @@ const getAllMovies = async () => {
 	return results;
 };
 
+const searchByQuery = async (query) => {
+	if (query) {
+		const response = await fetch(SEARCH_MOVIE_URL + query);
+		const { results } = await response.json();
+		return results;
+	}
+};
+
 const getDailyTrendingMovies = async () => {
 	const response = await fetch(TRENDING_MOVIES_URL);
 	const { results } = await response.json();
 	return results;
 };
 
-const getPopularMovies = async () => {
+const getTopRatedMovies = async () => {
 	const response = await fetch(TOP_RATED_MOVIES_URL);
 	const { results } = await response.json();
 	return results;
@@ -63,19 +73,14 @@ const getLanguages = async () => {
 };
 
 const filterData = (item) => {
-	let filterByText = true;
 	let filterByGenre = true;
 	let filterByLang = true;
 	let filterByRating = true;
 
-	if (searchBar.value.trim()) {
-		filterByText = item.title
-			.toLowerCase()
-			.includes(searchBar.value.trim().toLowerCase());
-	}
-
 	if (genres.selectedIndex) {
-		filterByGenre = item.genres[0].id == genres.value;
+		if (item.genres.length > 0)
+			filterByGenre = item.genres[0].id == genres.value;
+		else filterByGenre = false;
 	}
 
 	if (languages.selectedIndex) {
@@ -90,7 +95,7 @@ const filterData = (item) => {
 		else filterByRating = item.vote_average <= ratings.value;
 	}
 
-	return filterByText && filterByGenre && filterByLang && filterByRating;
+	return filterByGenre && filterByLang && filterByRating;
 };
 
 const sortData = (data) => {
@@ -170,9 +175,11 @@ const buildDataTable = async (dataArr) => {
 	              <td><i class="far fa-eye-slash" onclick="showDetails(this)"></i></td>
 	              <td class="spanRow hideDetail">
 	                <div id="rowDetail">
-	                  <img src="${IMAGE_URL}${
-				movie.poster_path
-			}" alt="" class="mediaImage" />
+	                  <img src="${
+											movie.poster_path
+												? IMAGE_URL + movie.poster_path
+												: '../img/no-image.png'
+										}" alt="movie poster" class="mediaImage" />
                     <div id="columnDetail">
 	                    <p><span class="subHeading">Overview:</span> ${
 												movie.overview
@@ -208,51 +215,83 @@ const displayAllMovies = () => {
 	getData(getAllMovies);
 };
 
-const displayPopularMovies = () => {
-	getData(getPopularMovies);
+const displayTopRatedMovies = () => {
+	getData(getTopRatedMovies);
 };
 
 /**
  * Event Listeners
  */
 allMovies.addEventListener('click', (e) => {
-	changeSelectedOption([allMovies, trending, popular], 0);
+	changeSelectedOption([allMovies, trending, topRated], 0);
 	clearFilters();
 	displayAllMovies();
 });
 
 trending.addEventListener('click', () => {
-	changeSelectedOption([allMovies, trending, popular], 1);
+	changeSelectedOption([allMovies, trending, topRated], 1);
 	clearFilters();
 	displayTrendingMovies();
 });
 
-popular.addEventListener('click', () => {
-	changeSelectedOption([allMovies, trending, popular], 2);
+topRated.addEventListener('click', () => {
+	changeSelectedOption([allMovies, trending, topRated], 2);
 	clearFilters();
-	displayPopularMovies();
+	displayTopRatedMovies();
 });
 
 searchBar.addEventListener('keypress', async (e) => {
 	if (e.key === 'Enter') {
+		sortBy.selectedIndex = 0;
+		const searchData = await searchByQuery(searchBar.value.trim());
+		if (searchData) {
+			stateObject.searchData = searchData;
+			await buildDataTable(searchData);
+		} else {
+			stateObject.searchData = [];
+			await buildDataTable(stateObject.data);
+		}
+	}
+});
+
+searchButton.addEventListener('click', async (e) => {
+	sortBy.selectedIndex = 0;
+	const searchData = await searchByQuery(searchBar.value.trim());
+	if (searchData) {
+		stateObject.searchData = searchData;
+		await buildDataTable(searchData);
+	} else {
+		stateObject.searchData = [];
 		await buildDataTable(stateObject.data);
 	}
 });
 
 genres.addEventListener('change', async () => {
-	await buildDataTable(stateObject.data);
+	sortBy.selectedIndex = 0;
+	stateObject.searchData.length === 0
+		? await buildDataTable(stateObject.data)
+		: await buildDataTable(stateObject.searchData);
 });
 
 languages.addEventListener('change', async () => {
-	await buildDataTable(stateObject.data);
+	sortBy.selectedIndex = 0;
+	stateObject.searchData.length === 0
+		? await buildDataTable(stateObject.data)
+		: await buildDataTable(stateObject.searchData);
 });
 
 ratings.addEventListener('change', async () => {
-	await buildDataTable(stateObject.data);
+	sortBy.selectedIndex = 0;
+	stateObject.searchData.length === 0
+		? await buildDataTable(stateObject.data)
+		: await buildDataTable(stateObject.searchData);
 });
 
 sortBy.addEventListener('change', async () => {
-	const dataList = [...stateObject.data];
+	const dataList =
+		stateObject.searchData.length === 0
+			? [...stateObject.data]
+			: [...stateObject.searchData];
 	await buildDataTable(sortData(dataList));
 });
 

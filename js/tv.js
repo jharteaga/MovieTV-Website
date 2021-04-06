@@ -9,6 +9,7 @@ const ALL_TV_URL = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}`
 const TRENDING_TV_URL = `https://api.themoviedb.org/3/trending/tv/day?api_key=${API_KEY}&page=1`;
 const TOP_RATED_TV_URL = `https://api.themoviedb.org/3/tv/top_rated?api_key=${API_KEY}&page=1`;
 const TV_DETAILS_URL = `https://api.themoviedb.org/3/tv/`;
+const SEARCH_TV_URL = `https://api.themoviedb.org/3/search/tv?api_key=${API_KEY}&query=`;
 /**
  * TMDB Common Endpoints URLs
  */
@@ -19,7 +20,8 @@ const IMAGE_URL = `https://image.tmdb.org/t/p/w300`;
  * State Object
  */
 const stateObject = {
-	data: []
+	data: [],
+	searchData: []
 };
 /**
  * Functions
@@ -28,6 +30,14 @@ const getAllTV = async () => {
 	const response = await fetch(ALL_TV_URL);
 	const { results } = await response.json();
 	return results;
+};
+
+const searchByQuery = async (query) => {
+	if (query) {
+		const response = await fetch(SEARCH_TV_URL + query);
+		const { results } = await response.json();
+		return results;
+	}
 };
 
 const getDailyTrendingTV = async () => {
@@ -64,19 +74,14 @@ const getLanguages = async () => {
 };
 
 const filterData = (item) => {
-	let filterByText = true;
 	let filterByGenre = true;
 	let filterByLang = true;
 	let filterByRating = true;
 
-	if (searchBar.value.trim()) {
-		filterByText = item.name
-			.toLowerCase()
-			.includes(searchBar.value.trim().toLowerCase());
-	}
-
 	if (genres.selectedIndex) {
-		filterByGenre = item.genres[0].id == genres.value;
+		if (item.genres.length > 0)
+			filterByGenre = item.genres[0].id == genres.value;
+		else filterByGenre = false;
 	}
 
 	if (languages.selectedIndex) {
@@ -91,7 +96,7 @@ const filterData = (item) => {
 		else filterByRating = item.vote_average <= ratings.value;
 	}
 
-	return filterByText && filterByGenre && filterByLang && filterByRating;
+	return filterByGenre && filterByLang && filterByRating;
 };
 
 const sortData = (data) => {
@@ -169,9 +174,11 @@ const buildDataTable = async (dataArr) => {
 	              <td><i class="far fa-eye-slash" onclick="showDetails(this)"></i></td>
 	              <td class="spanRow hideDetail">
 	                <div id="rowDetail">
-	                  <img src="${IMAGE_URL}${
-				tv.poster_path
-			}" alt="" class="mediaImage" />
+	                  <img src="${
+											tv.poster_path
+												? IMAGE_URL + tv.poster_path
+												: '../img/no-image.png'
+										}" alt="" class="mediaImage" />
                     <div id="columnDetail">
 	                    <p><span class="subHeading">Overview:</span> ${
 												tv.overview
@@ -237,24 +244,56 @@ topRatedTV.addEventListener('click', () => {
 
 searchBar.addEventListener('keypress', async (e) => {
 	if (e.key === 'Enter') {
+		sortBy.selectedIndex = 0;
+		const searchData = await searchByQuery(searchBar.value.trim());
+		if (searchData) {
+			stateObject.searchData = searchData;
+			await buildDataTable(searchData);
+		} else {
+			stateObject.searchData = [];
+			await buildDataTable(stateObject.data);
+		}
+	}
+});
+
+searchButton.addEventListener('click', async (e) => {
+	sortBy.selectedIndex = 0;
+	const searchData = await searchByQuery(searchBar.value.trim());
+	if (searchData) {
+		stateObject.searchData = searchData;
+		await buildDataTable(searchData);
+	} else {
+		stateObject.searchData = [];
 		await buildDataTable(stateObject.data);
 	}
 });
 
 genres.addEventListener('change', async () => {
-	await buildDataTable(stateObject.data);
+	sortBy.selectedIndex = 0;
+	stateObject.searchData.length === 0
+		? await buildDataTable(stateObject.data)
+		: buildDataTable(stateObject.searchData);
 });
 
 languages.addEventListener('change', async () => {
-	await buildDataTable(stateObject.data);
+	sortBy.selectedIndex = 0;
+	stateObject.searchData.length === 0
+		? await buildDataTable(stateObject.data)
+		: buildDataTable(stateObject.searchData);
 });
 
 ratings.addEventListener('change', async () => {
-	await buildDataTable(stateObject.data);
+	sortBy.selectedIndex = 0;
+	stateObject.searchData.length === 0
+		? await buildDataTable(stateObject.data)
+		: buildDataTable(stateObject.searchData);
 });
 
 sortBy.addEventListener('change', async () => {
-	const dataList = [...stateObject.data];
+	const dataList =
+		stateObject.searchData.length === 0
+			? [...stateObject.data]
+			: [...stateObject.searchData];
 	await buildDataTable(sortData(dataList));
 });
 

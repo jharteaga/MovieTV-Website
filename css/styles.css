@@ -150,6 +150,7 @@ header nav a.selected {
 	position: absolute;
 	top: 13px;
 	right: 20px;
+	cursor: pointer;
 }
 
 .dropdown {
@@ -246,7 +247,7 @@ header nav a.selected {
 }
 
 #rowDetail .mediaImage {
-	width: 180px;
+	width: 190px;
 	height: 260px;
 	border-radius: 27px;
 }
