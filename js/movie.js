@@ -90,7 +90,6 @@ const filterData = (item) => {
 	}
 
 	if (ratings.selectedIndex) {
-		console.log(ratings.value);
 		if (ratings.value >= 6) filterByRating = item.vote_average >= ratings.value;
 		else filterByRating = item.vote_average <= ratings.value;
 	}
@@ -146,35 +145,35 @@ const clearFilters = () => {
  * Display Data Table
  */
 const buildDataTable = async (dataArr) => {
-	tableContainer.innerHTML = '';
-
-	let output = `<table id="dataTable">
-      <thead>
-        <th>Title</th>
-        <th>Genre</th>
-        <th>Language</th>
-        <th>Rating</th>
-        <th>Details</th>
-      </thead>
-      <tbody>`;
+	tableBody.innerHTML = '';
 
 	for (let item of dataArr) {
 		const movie = await getMovie(item.id);
 		if (filterData(movie)) {
-			output += `<tr>
-	              <td>${movie.title}</td>
-	              <td>${
-									movie.genres.length > 0 ? movie.genres[0].name : 'Unknown'
-								}</td>
-	              <td>${
-									movie.spoken_languages.length > 0
-										? movie.spoken_languages[0].english_name
-										: 'Unknown'
-								}</td>
-	              <td>${movie.vote_average}</td>
-	              <td><i class="far fa-eye-slash" onclick="showDetails(this)"></i></td>
-	              <td class="spanRow hideDetail">
-	                <div id="rowDetail">
+			const row = document.createElement('tr');
+
+			const titleCell = row.insertCell(0);
+			titleCell.innerHTML = movie.title;
+
+			const genreCell = row.insertCell(1);
+			genreCell.innerHTML =
+				movie.genres.length > 0 ? movie.genres[0].name : 'Unknown';
+
+			const languageCell = row.insertCell(2);
+			languageCell.innerHTML =
+				movie.spoken_languages.length > 0
+					? movie.spoken_languages[0].english_name
+					: 'Unknown';
+
+			const ratingCell = row.insertCell(3);
+			ratingCell.innerHTML = movie.vote_average;
+
+			const eyeIconCell = row.insertCell(4);
+			eyeIconCell.innerHTML = `<i class="far fa-eye-slash" onclick="showDetails(this)"></i>`;
+
+			const detailsCell = row.insertCell(5);
+			detailsCell.classList.add('spanRow', 'hideDetail');
+			detailsCell.innerHTML = `<div id="rowDetail">
 	                  <img src="${
 											movie.poster_path
 												? IMAGE_URL + movie.poster_path
@@ -188,14 +187,11 @@ const buildDataTable = async (dataArr) => {
 											  <span class="subHeading">Release Date:</span> ${movie.release_date}
 										  </p>
                     </div>
-	                </div>
-							  </td>
-	            </tr>`;
+	                </div>`;
+
+			tableBody.appendChild(row);
 		}
 	}
-
-	output += '</tbody></table>';
-	tableContainer.innerHTML = output;
 };
 
 const getData = async (func) => {

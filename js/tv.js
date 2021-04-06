@@ -57,7 +57,6 @@ const getTV = async (id) => {
 		`${TV_DETAILS_URL}${id}?api_key=${API_KEY}&language=en-US`
 	);
 	const result = await response.json();
-	console.log(result);
 	return result;
 };
 
@@ -91,7 +90,6 @@ const filterData = (item) => {
 	}
 
 	if (ratings.selectedIndex) {
-		console.log(ratings.value);
 		if (ratings.value >= 6) filterByRating = item.vote_average >= ratings.value;
 		else filterByRating = item.vote_average <= ratings.value;
 	}
@@ -147,33 +145,35 @@ const clearFilters = () => {
  * Display Data Table
  */
 const buildDataTable = async (dataArr) => {
-	tableContainer.innerHTML = '';
-
-	let output = `<table id="dataTable">
-      <thead>
-        <th>Title</th>
-        <th>Genre</th>
-        <th>Language</th>
-        <th>Rating</th>
-        <th>Details</th>
-      </thead>
-      <tbody>`;
+	tableBody.innerHTML = '';
 
 	for (let item of dataArr) {
 		const tv = await getTV(item.id);
 		if (filterData(tv)) {
-			output += `<tr>
-	              <td>${tv.name}</td>
-	              <td>${tv.genres.length > 0 ? tv.genres[0].name : 'Unknown'}</td>
-	              <td>${
-									tv.spoken_languages.length > 0
-										? tv.spoken_languages[0].english_name
-										: 'Unknown'
-								}</td>
-	              <td>${tv.vote_average}</td>
-	              <td><i class="far fa-eye-slash" onclick="showDetails(this)"></i></td>
-	              <td class="spanRow hideDetail">
-	                <div id="rowDetail">
+			const row = document.createElement('tr');
+
+			const titleCell = row.insertCell(0);
+			titleCell.innerHTML = tv.name;
+
+			const genreCell = row.insertCell(1);
+			genreCell.innerHTML =
+				tv.genres.length > 0 ? tv.genres[0].name : 'Unknown';
+
+			const languageCell = row.insertCell(2);
+			languageCell.innerHTML =
+				tv.spoken_languages.length > 0
+					? tv.spoken_languages[0].english_name
+					: 'Unknown';
+
+			const ratingCell = row.insertCell(3);
+			ratingCell.innerHTML = tv.vote_average;
+
+			const eyeIconCell = row.insertCell(4);
+			eyeIconCell.innerHTML = `<i class="far fa-eye-slash" onclick="showDetails(this)"></i>`;
+
+			const detailsCell = row.insertCell(5);
+			detailsCell.classList.add('spanRow', 'hideDetail');
+			detailsCell.innerHTML = `<div id="rowDetail">
 	                  <img src="${
 											tv.poster_path
 												? IMAGE_URL + tv.poster_path
@@ -190,14 +190,11 @@ const buildDataTable = async (dataArr) => {
 											  <span class="subHeading">Seasons:</span> ${tv.number_of_seasons}
 										  </p>
                     </div>
-	                </div>
-							  </td>
-	            </tr>`;
+	                </div>`;
+
+			tableBody.appendChild(row);
 		}
 	}
-
-	output += '</tbody></table>';
-	tableContainer.innerHTML = output;
 };
 
 const getData = async (func) => {
